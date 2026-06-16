@@ -1,5 +1,3 @@
-# PruebaTecnica-QA-KevinTopon
-
 # Prueba Técnica QA - Kevin Topon
 
 ## Contenido
