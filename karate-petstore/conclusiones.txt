@@ -1,0 +1,100 @@
+================================================================================
+  CONCLUSIONES - Prueba Tecnica QA Junior | PetStore User API
+  Herramienta: Karate DSL 1.5.0 | API: https://petstore.swagger.io/v2
+================================================================================
+
+1. OBJETIVO CUMPLIDO
+--------------------
+Se implemento y ejecuto con exito la suite de pruebas REST solicitada, cubriendo
+el ciclo CRUD completo sobre el recurso User:
+
+  [OK] Crear un usuario
+  [OK] Buscar el usuario creado
+  [OK] Actualizar nombre y correo
+  [OK] Buscar el usuario actualizado
+  [OK] Eliminar el usuario
+
+Adicionalmente se incluyo verificacion post-eliminacion (GET retorna HTTP 404),
+lo cual refuerza la calidad del escenario de prueba.
+
+
+2. ENDPOINTS EVALUADOS
+----------------------
+  Metodo   | Endpoint              | Proposito
+  ---------|----------------------|----------------------------------
+  POST     | /user                 | Crear usuario con body JSON
+  GET      | /user/{username}      | Consultar usuario por username
+  PUT      | /user/{username}      | Actualizar datos del usuario
+  DELETE   | /user/{username}      | Eliminar usuario
+
+Documentacion de referencia: https://petstore.swagger.io/
+
+
+3. HALLAZGOS TECNICOS
+---------------------
+
+3.1 Respuestas de la API
+  - POST /user retorna ApiResponse con message = ID numerico del usuario (no siempre "1").
+  - GET /user/{username} retorna el objeto User completo incluyendo id autogenerado.
+  - PUT /user/{username} requiere enviar el id obtenido en GET; sin el id correcto la
+    actualizacion no persiste (hallazgo relevante para QA).
+  - DELETE /user/{username} retorna ApiResponse confirmando la eliminacion.
+
+3.2 Comportamiento observado
+  - La API es un mock publico: los datos NO persisten indefinidamente, pero si
+    permiten ejecutar flujos CRUD completos en una misma sesion de prueba.
+  - Tras DELETE, un GET al mismo username retorna HTTP 404 (User not found).
+  - El id del usuario es asignado por el servidor en la creacion; se captura en
+    el paso GET y se reutiliza en el PUT para mantener consistencia.
+
+3.3 Validaciones implementadas
+  - Codigos de estado HTTP (200 para operaciones exitosas, 404 post-delete).
+  - Esquemas JSON (user-schema.json, api-response.json) para estructura de salida.
+  - Match de campos especificos: username, firstName, lastName, email.
+  - Generacion dinamica de datos con UUID para evitar conflictos por username duplicado.
+
+
+4. DECISIONES DE DISENO EN LAS PRUEBAS
+--------------------------------------
+  - Feature principal (user-lifecycle.feature): un solo escenario E2E secuencial
+    que demuestra el flujo completo del ejercicio en orden logico.
+  - Features modulares (01 a 05): cada caso del enunciado documentado de forma
+    independiente con sus entradas, salidas y logs explicitos.
+  - Helper generate-user.js: centraliza la creacion de datos de prueba unicos.
+  - Payload externalizado en JSON: facilita mantenimiento y revision por el evaluador.
+  - Ejecucion secuencial (parallel=1): evita condiciones de carrera en flujos CRUD.
+  - Logging detallado (logPrettyRequest/Response): captura entradas y salidas en reportes.
+
+
+5. VENTAJAS DE KARATE PARA ESTE EJERCICIO
+-----------------------------------------
+  - Sintaxis Gherkin legible para perfiles QA Junior y stakeholders no tecnicos.
+  - Validacion JSON nativa sin dependencias adicionales de assertions.
+  - Reportes HTML integrados con trazabilidad request/response.
+  - Integracion directa con Maven y JUnit 5 para CI/CD futuro.
+  - Soporte para JavaScript embebido (generacion dinamica de variables).
+
+
+6. RIESGOS Y LIMITACIONES
+-------------------------
+  - Dependencia de servicio externo: si petstore.swagger.io no esta disponible,
+    las pruebas fallaran. Mitigacion: timeouts configurados (10s) y reintentos manuales.
+  - API mock sin autenticacion: no se evaluo seguridad (tokens, OAuth, etc.).
+  - No se validaron casos negativos exhaustivos (username vacio, email invalido),
+    aunque la arquitectura del proyecto permite agregarlos facilmente.
+
+
+7. CONCLUSION FINAL
+-------------------
+La API PetStore responde correctamente al ciclo CRUD de usuarios segun lo documentado
+en Swagger. Las pruebas automatizadas con Karate demuestran trazabilidad completa
+de entradas, salidas, variables y validaciones en cada paso del ejercicio.
+
+El proyecto es reproducible siguiendo readme.txt, genera reportes HTML como evidencia
+y esta estructurado para escalar (nuevos escenarios, integracion CI, mas recursos API).
+
+Estado de la suite: APROBADA (7 escenarios, 0 fallos en ejecucion local).
+
+Reporte HTML generado en: target/karate-reports/karate-summary.html
+
+Fecha de ejecucion: Junio 2026

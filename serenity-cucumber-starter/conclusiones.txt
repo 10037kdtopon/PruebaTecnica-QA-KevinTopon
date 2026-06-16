@@ -1,0 +1,23 @@
+========================================================================
+HALLAZGOS Y CONCLUSIONES - PRUEBA E2E DEMOBLAZE
+========================================================================
+
+1. RESUMEN DEL EJERCICIO
+Se automatizó con éxito el flujo completo de compra E2E en la página de Demoblaze (https://www.demoblaze.com/), incluyendo:
+- La navegación al portal.
+- Selección y agregación de dos productos diferentes ("Samsung galaxy s6" y "Nokia lumia 1520") de manera consecutiva.
+- Gestión y aceptación robusta de alertas de navegador nativas (Javascript alerts).
+- Ingreso al carrito de compras con validación explícita de la presencia de ambos artículos.
+- Diligenciamiento completo del formulario de pago.
+- Validación final del mensaje de éxito del pedido ("Thank you for your purchase!") y culminación del flujo.
+
+2. HALLAZGOS Y DESAFÍOS TÉCNICOS
+- Ventanas de Alerta Nativas: Al agregar productos al carrito, Demoblaze genera una alerta del sistema de tipo "Product added". En la automatización tradicional esto puede causar inconsistencias. Se implementó una interacción Screenplay personalizada ('AcceptAlert') con esperas explícitas ('WebDriverWait') que espera y acepta la alerta antes de continuar, garantizando estabilidad.
+- Asincronía y Tiempos de Carga: La tienda utiliza AJAX para actualizar el carrito y enviar formularios. Serenity BDD maneja eficientemente las esperas implícitas, pero agregar aserciones con 'Ensure' de Serenity Screenplay asegura que los elementos estén cargados en el DOM antes de interactuar.
+- Formulario de Compra (Place Order): Los inputs en el formulario tienen IDs definidos ('name', 'country', 'city', 'card', 'month', 'year'), facilitando una localización limpia y directa en vez de depender de XPaths complejos.
+
+3. CONCLUSIONES SOBRE LA ARQUITECTURA
+- Patrón Screenplay: La implementación mediante el patrón Screenplay (Actores, Tareas, Interacciones, Preguntas) demuestra ser superior al modelo tradicional Page Object Model (POM) estándar, ya que promueve la reutilización de código, respeta los principios SOLID (especialmente Responsabilidad Única y Abierto/Cerrado) y mejora sustancialmente la legibilidad del código.
+- Reportabilidad con Serenity BDD: El reporte autogenerado es impecable. Muestra de forma secuencial y visual cada uno de los pasos dados por el Actor, facilitando la auditoría de pruebas tanto para perfiles técnicos como no técnicos (QA, Developers, Product Owners).
+- Cucumber: El uso de Cucumber facilita la comunicación y el entendimiento a través de Gherkin, alineando los objetivos de negocio con las pruebas automatizadas.
+========================================================================

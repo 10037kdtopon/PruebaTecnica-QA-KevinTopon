@@ -1,0 +1,11 @@
+{
+  "_comment": "Plantilla de referencia. Los datos reales se generan en api/helpers/generate-user.js",
+  "id": 0,
+  "username": "qa_user_ejemplo",
+  "firstName": "Ana",
+  "lastName": "QA",
+  "email": "ana.qa@petstore.test",
+  "password": "SecurePass123!",
+  "phone": "3001234567",
+  "userStatus": 1
+}
