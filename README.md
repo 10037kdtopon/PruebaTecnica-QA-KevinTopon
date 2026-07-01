@@ -1,4 +1,4 @@
-# 🚀 **Prueba Técnica QA - Kevin Topon**
+# 🚀 **Ejercicio  QA - Kevin Topon**
 
 ## 📋 **Descripción**
 
